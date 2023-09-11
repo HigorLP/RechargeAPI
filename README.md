@@ -23,7 +23,7 @@ A Recharge API é uma plataforma de recarga online que permite aos usuários com
 
 ## Como Usar
 
-Para começar a usar a API Recharge, siga a [Documentação da API](https://github.com/HigorLP/RechargeAPI.wiki.git) para obter detalhes sobre os endpoints, rotas, payloads JSON e retornos do banco de dados.
+Para começar a usar a API Recharge, siga a [Documentação da API](https://github.com/HigorLP/RechargeAPI/wiki/01.-Home) para obter detalhes sobre os endpoints, rotas, payloads JSON e retornos do banco de dados.
 
 ## Contribuindo
 
