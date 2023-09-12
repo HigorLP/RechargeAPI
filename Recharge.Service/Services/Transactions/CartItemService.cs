@@ -17,7 +17,7 @@ public class CartItemService : ICartItemService {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<ResultService<CartItemDTO>> CreateCartItem(CartItemDTO cartItemDTO) {
+    public async Task<object> CreateCartItem(CartItemDTO cartItemDTO) {
         try {
             if (cartItemDTO.Amount <= 0) {
                 return ResultService.Fail<CartItemDTO>("A quantidade deve ser maior que zero.");
@@ -28,13 +28,24 @@ public class CartItemService : ICartItemService {
             var createdCartItem = await _cartItemRepository.CreateCartItem(cartItem);
             var createdCartItemDTO = _mapper.Map<CartItemDTO>(createdCartItem);
 
-            return ResultService.Ok(createdCartItemDTO);
+            return (createdCartItemDTO);
         } catch (Exception ex) {
             return ResultService.Fail<CartItemDTO>($"Erro ao criar item do carrinho: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<CartItemDTO>> GetCartItemById(Guid id) {
+    public async Task<ICollection<object>> GetAllCartItems() {
+        try {
+            var cartItems = await _cartItemRepository.GetAllCartItems();
+            var cartItemsDTO = _mapper.Map<ICollection<CartItemDTO>>(cartItems);
+
+            return new List<object>(cartItemsDTO);
+        } catch (Exception ex) {
+            return new List<object> { ($"Erro ao obter todas os carrinho: {ex.Message}") };
+        }
+    }
+
+    public async Task<object> GetCartItemById(Guid id) {
         try {
             var cartItem = await _cartItemRepository.GetCartItemById(id);
 
@@ -43,24 +54,24 @@ public class CartItemService : ICartItemService {
             }
 
             var cartItemDTO = _mapper.Map<CartItemDTO>(cartItem);
-            return ResultService.Ok(cartItemDTO);
+            return (cartItemDTO);
         } catch (Exception ex) {
             return ResultService.Fail<CartItemDTO>($"Erro ao obter item do carrinho por ID: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<ICollection<CartItemDTO>>> GetCartItensByPurchase(Guid purchaseId) {
+    public async Task<ICollection<object>> GetCartItensByPurchase(Guid purchaseId) {
         try {
             var cartItems = await _cartItemRepository.GetCartItensByPurchase(purchaseId);
             var cartItemDTOs = _mapper.Map<ICollection<CartItemDTO>>(cartItems);
 
-            return ResultService.Ok(cartItemDTOs);
+            return new List<object>(cartItemDTOs);
         } catch (Exception ex) {
-            return ResultService.Fail<ICollection<CartItemDTO>>($"Erro ao obter itens do carrinho por compra: {ex.Message}");
+            return new List<object> { ($"Erro ao obter itens do carrinho por compra: {ex.Message}") };
         }
     }
 
-    public async Task<ResultService<CartItemDTO>> RemoveCartItem(Guid id, CartItemDTO cartItemDTO) {
+    public async Task<object> RemoveCartItem(Guid id, CartItemDTO cartItemDTO) {
         try {
             var existingCartItem = await _cartItemRepository.GetCartItemById(id);
 
@@ -71,7 +82,7 @@ public class CartItemService : ICartItemService {
             var removedCartItem = await _cartItemRepository.RemoveCartItem(existingCartItem);
             var removedCartItemDTO = _mapper.Map<CartItemDTO>(removedCartItem);
 
-            return ResultService.Ok(removedCartItemDTO);
+            return (removedCartItemDTO);
         } catch (Exception ex) {
             return ResultService.Fail<CartItemDTO>($"Erro ao remover item do carrinho: {ex.Message}");
         }

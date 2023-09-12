@@ -18,4 +18,6 @@ public sealed class Purchase : Entity {
         Status = status;
         CartItems = new List<CartItem>();
     }
+
+    public Purchase() { }
 }

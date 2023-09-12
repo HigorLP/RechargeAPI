@@ -17,4 +17,6 @@ public sealed class CartItem : Entity {
         Amount = amount;
         PriceUn = priceUn;
     }
+
+    public CartItem() { }
 }

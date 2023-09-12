@@ -5,6 +5,7 @@ public interface IUserRepository {
 
     Task<User> RegisterUser(User user);
     Task<User> GetUserById(Guid id);
+    Task<User> GetUserDetail(Guid userId);
     Task<User> GetUserByEmail(string email);
     Task<User> GetUserByDocument(string cpf);
     Task<ICollection<User>> GetAllUsers();

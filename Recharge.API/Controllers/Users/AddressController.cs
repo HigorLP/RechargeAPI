@@ -47,8 +47,8 @@ public class AddressController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetAddress([FromBody] AddressDTO addressDTO) {
-        var result = await _addressService.GetAddress(addressDTO);
+    public async Task<ActionResult> GetAddress() {
+        var result = await _addressService.GetAddress();
 
         if (result == null) {
             return BadRequest("Erro ao obter endereços.");

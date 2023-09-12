@@ -18,6 +18,10 @@ public class CartItemRepository : ICartItemRepository {
         return cartItem;
     }
 
+    public async Task<ICollection<CartItem>> GetAllCartItems() {
+        return await _dbContext.CartItems.ToListAsync();
+    }
+
     public async Task<CartItem> GetCartItemById(Guid id) {
         return await _dbContext.CartItems.FirstOrDefaultAsync(x => x.Id == id);
     }

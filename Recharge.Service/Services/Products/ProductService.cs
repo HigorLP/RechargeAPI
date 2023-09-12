@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Recharge.Application.DTOs;
 using Recharge.Application.DTOs.Products;
 using Recharge.Application.Interfaces.Products;
 using Recharge.Application.Validator.Products;
@@ -19,20 +20,21 @@ public class ProductService : IProductService {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<ResultService<ProductDTO>> CreateProduct(ProductDTO productDTO) {
+    public async Task<object> CreateProduct(ProductDTO productDTO) {
         try {
             var product = _mapper.Map<Product>(productDTO);
 
             var checkProduct = await _productRepository.GetProductByName(product.Name);
             if (checkProduct != null) {
-                return ResultService.Fail<ProductDTO>("Produto já cadastrado.");
+                return new ErrorDTO { ErrorMessage = "Produto já cadastrado." };
+
             }
 
             var validator = new ProductValidator();
             ValidationResult validationResult = await validator.ValidateAsync(product);
 
             if (!validationResult.IsValid) {
-                return ResultService.RequestError<ProductDTO>("Erro ao criar produto.", validationResult);
+                return new ErrorDTO { ErrorMessage = "Erro ao criar produto." };
             }
 
             //product.CreatedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
@@ -41,116 +43,116 @@ public class ProductService : IProductService {
             var createdProduct = await _productRepository.CreateProduct(product);
             var createdProductDTO = _mapper.Map<ProductDTO>(createdProduct);
 
-            return ResultService.Ok(createdProductDTO);
+            return createdProductDTO;
         } catch (Exception ex) {
-            return ResultService.Fail<ProductDTO>($"Erro ao criar produto: {ex.Message}");
+            return new ErrorDTO { ErrorMessage = $"Erro ao criar produto: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ProductDTO>> GetProductById(Guid id) {
+    public async Task<object> GetProductById(Guid id) {
         try {
             var product = await _productRepository.GetProductById(id);
 
             if (product == null) {
-                return ResultService.Fail<ProductDTO>("Produto não encontrado.");
+                return new ErrorDTO { ErrorMessage = "Produto não encontrado." };
             }
 
             var productDTO = _mapper.Map<ProductDTO>(product);
-            return ResultService.Ok(productDTO);
+            return productDTO;
         } catch (Exception ex) {
-            return ResultService.Fail<ProductDTO>($"Erro ao obter produto por ID: {ex.Message}");
+            return new ErrorDTO { ErrorMessage = $"Erro ao obter produto por ID: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ProductDTO>> GetProductByName(string productName) {
+    public async Task<object> GetProductByName(string productName) {
         try {
             var product = await _productRepository.GetProductByName(productName);
 
             if (product == null) {
-                return ResultService.Fail<ProductDTO>("Produto não encontrado.");
+                return new ErrorDTO { ErrorMessage = "Produto não encontrado." };
             }
 
             var productDTO = _mapper.Map<ProductDTO>(product);
-            return ResultService.Ok(productDTO);
+            return productDTO;
         } catch (Exception ex) {
-            return ResultService.Fail<ProductDTO>($"Erro ao obter produto por nome: {ex.Message}");
+            return new ErrorDTO { ErrorMessage = $"Erro ao obter produto por nome: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ProductDTO>> GetProductBySku(string sku) {
+    public async Task<object> GetProductBySku(string sku) {
         try {
             var product = await _productRepository.GetProductBySku(sku);
 
             if (product == null) {
-                return ResultService.Fail<ProductDTO>("Produto não encontrado.");
+                return new ErrorDTO { ErrorMessage = "Produto não encontrado." };
             }
 
             var productDTO = _mapper.Map<ProductDTO>(product);
-            return ResultService.Ok(productDTO);
+            return productDTO;
         } catch (Exception ex) {
-            return ResultService.Fail<ProductDTO>($"Erro ao obter produto por SKU: {ex.Message}");
+            return new ErrorDTO { ErrorMessage = $"Erro ao obter produto por SKU: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ProductDTO>> GetProductByBarCode(string barCode) {
+    public async Task<object> GetProductByBarCode(string barCode) {
         try {
             var product = await _productRepository.GetProductByBarCoode(barCode);
 
             if (product == null) {
-                return ResultService.Fail<ProductDTO>("Produto não encontrado.");
+                return new ErrorDTO { ErrorMessage = "Produto não encontrado." };
             }
 
             var productDTO = _mapper.Map<ProductDTO>(product);
-            return ResultService.Ok(productDTO);
+            return productDTO;
         } catch (Exception ex) {
-            return ResultService.Fail<ProductDTO>($"Erro ao obter produto por código de barras: {ex.Message}");
+            return new ErrorDTO { ErrorMessage = $"Erro ao obter produto por código de barras: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ICollection<ProductDTO>>> GetAllProducts() {
+    public async Task<ICollection<object>> GetAllProducts() {
         try {
             var products = await _productRepository.GetAllProducts();
             var productDTOs = _mapper.Map<ICollection<ProductDTO>>(products);
 
-            return ResultService.Ok(productDTOs);
+            return new List<object>(productDTOs);
         } catch (Exception ex) {
-            return ResultService.Fail<ICollection<ProductDTO>>($"Erro ao obter todos os produtos: {ex.Message}");
+            return new List<object> { $"Erro ao obter todos os produtos: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ICollection<ProductDTO>>> GetAllProductsInTheCategory(Guid categoryId) {
+    public async Task<ICollection<object>> GetAllProductsInTheCategory(Guid categoryId) {
         try {
             var products = await _productRepository.GetAllProductsInTheCategory(categoryId);
             var productDTOs = _mapper.Map<ICollection<ProductDTO>>(products);
 
-            return ResultService.Ok(productDTOs);
+            return new List<object>(productDTOs);
         } catch (Exception ex) {
-            return ResultService.Fail<ICollection<ProductDTO>>($"Erro ao obter produtos na categoria: {ex.Message}");
+            return new List<object> { $"Erro ao obter produtos na categoria: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ICollection<ProductDTO>>> GetAllProductsInTheBrand(Guid brandId) {
+    public async Task<ICollection<object>> GetAllProductsInTheBrand(Guid brandId) {
         try {
             var products = await _productRepository.GetAllProductsInTheBrand(brandId);
             var productDTOs = _mapper.Map<ICollection<ProductDTO>>(products);
 
-            return ResultService.Ok(productDTOs);
+            return new List<object>(productDTOs);
         } catch (Exception ex) {
-            return ResultService.Fail<ICollection<ProductDTO>>($"Erro ao obter produtos na marca: {ex.Message}");
+            return new List<object> { $"Erro ao obter produtos na marca: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ProductDTO>> UpdateProduct(Guid id, ProductDTO productDTO) {
+    public async Task<object> UpdateProduct(Guid id, ProductDTO productDTO) {
         try {
             var existingProduct = await _productRepository.GetProductById(id);
 
             if (existingProduct == null) {
-                return ResultService.Fail<ProductDTO>("Produto não encontrado.");
+                return new ErrorDTO { ErrorMessage = "Produto não encontrado." };
             }
 
             var checkProduct = await _productRepository.GetProductByName(productDTO.Name);
             if (checkProduct != null && checkProduct.Id != id) {
-                return ResultService.Fail<ProductDTO>("Produto já cadastrado.");
+                return new ErrorDTO { ErrorMessage = "Produto já cadastrado." };
             }
 
             productDTO.Id = existingProduct.Id;
@@ -160,7 +162,7 @@ public class ProductService : IProductService {
             ValidationResult validationResult = await validator.ValidateAsync(updatedProduct);
 
             if (!validationResult.IsValid) {
-                return ResultService.RequestError<ProductDTO>("Erro ao atualizar produto.", validationResult);
+                return new ErrorDTO { ErrorMessage = "Erro ao atualizar produto." };
             }
 
             //updatedProduct.EditedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
@@ -169,26 +171,26 @@ public class ProductService : IProductService {
             var updatedProductResult = await _productRepository.UpdateProduct(updatedProduct);
             var updatedProductDTO = _mapper.Map<ProductDTO>(updatedProductResult);
 
-            return ResultService.Ok(updatedProductDTO);
+            return updatedProductDTO;
         } catch (Exception ex) {
-            return ResultService.Fail<ProductDTO>($"Erro ao atualizar produto: {ex.Message}");
+            return new ErrorDTO { ErrorMessage = $"Erro ao atualizar produto: {ex.Message}" };
         }
     }
 
-    public async Task<ResultService<ProductDTO>> RemoveProduct(Guid id) {
+    public async Task<object> RemoveProduct(Guid id) {
         try {
             var existingProduct = await _productRepository.GetProductById(id);
 
             if (existingProduct == null) {
-                return ResultService.Fail<ProductDTO>("Produto não encontrado.");
+                return new ErrorDTO { ErrorMessage = "Produto não encontrado." };
             }
 
             var removedProduct = await _productRepository.RemoveProduct(existingProduct);
             var removedProductDTO = _mapper.Map<ProductDTO>(removedProduct);
 
-            return ResultService.Ok(removedProductDTO);
+            return removedProductDTO;
         } catch (Exception ex) {
-            return ResultService.Fail<ProductDTO>($"Erro ao remover produto: {ex.Message}");
+            return new ErrorDTO { ErrorMessage = $"Erro ao remover produto: {ex.Message}" };
         }
     }
 }

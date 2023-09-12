@@ -13,10 +13,10 @@ namespace Recharge.API.Controllers.Transactions {
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCartItem([FromBody] CartItemDTO cartItemDTO) {
+        public async Task<ActionResult> CreateCartItem([FromBody] CartItemDTO cartItemDTO) {
             var result = await _cartItemService.CreateCartItem(cartItemDTO);
 
-            if (result.isSucess) {
+            if (result != null) {
                 return Ok(result);
             }
 
@@ -24,10 +24,21 @@ namespace Recharge.API.Controllers.Transactions {
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCartItemById(Guid id) {
+        public async Task<ActionResult> GetCartItemById(Guid id) {
             var result = await _cartItemService.GetCartItemById(id);
 
-            if (result.isSucess) {
+            if (result != null) {
+                return Ok(result);
+            }
+
+            return NotFound(result);
+        }
+
+        [HttpGet()]
+        public async Task<ActionResult> GetAllCartItems() {
+            var result = await _cartItemService.GetAllCartItems();
+
+            if (result != null) {
                 return Ok(result);
             }
 
@@ -35,10 +46,10 @@ namespace Recharge.API.Controllers.Transactions {
         }
 
         [HttpGet("purchase/{purchaseId}")]
-        public async Task<IActionResult> GetCartItensByPurchase(Guid purchaseId) {
+        public async Task<ActionResult> GetCartItensByPurchase(Guid purchaseId) {
             var result = await _cartItemService.GetCartItensByPurchase(purchaseId);
 
-            if (result.isSucess) {
+            if (result != null) {
                 return Ok(result);
             }
 
@@ -46,10 +57,10 @@ namespace Recharge.API.Controllers.Transactions {
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> RemoveCartItem(Guid id) {
+        public async Task<ActionResult> RemoveCartItem(Guid id) {
             var result = await _cartItemService.RemoveCartItem(id, null);
 
-            if (result.isSucess) {
+            if (result != null) {
                 return Ok(result);
             }
 

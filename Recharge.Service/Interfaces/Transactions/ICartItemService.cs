@@ -1,10 +1,10 @@
 ﻿using Recharge.Application.DTOs.Transactions;
-using Recharge.Application.Services;
 
 namespace Recharge.Application.Interfaces.Transactions;
 public interface ICartItemService {
-    Task<ResultService<CartItemDTO>> CreateCartItem(CartItemDTO cartItemDTO);
-    Task<ResultService<CartItemDTO>> GetCartItemById(Guid id);
-    Task<ResultService<ICollection<CartItemDTO>>> GetCartItensByPurchase(Guid purchaseId);
-    Task<ResultService<CartItemDTO>> RemoveCartItem(Guid id, CartItemDTO cartItemDTO);
+    Task<object> CreateCartItem(CartItemDTO cartItemDTO);
+    Task<object> GetCartItemById(Guid id);
+    Task<ICollection<object>> GetCartItensByPurchase(Guid purchaseId);
+    Task<ICollection<object>> GetAllCartItems();
+    Task<object> RemoveCartItem(Guid id, CartItemDTO cartItemDTO);
 }

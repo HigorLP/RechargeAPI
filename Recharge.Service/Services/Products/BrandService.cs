@@ -19,7 +19,7 @@ namespace Recharge.Application.Services.Products {
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ResultService<BrandDTO>> CreateBrand(BrandDTO brandDTO) {
+        public async Task<object> CreateBrand(BrandDTO brandDTO) {
             try {
                 var brand = _mapper.Map<Brand>(brandDTO);
 
@@ -41,13 +41,13 @@ namespace Recharge.Application.Services.Products {
                 var createdBrand = await _brandRepository.CreateBrand(brand);
                 var createdBrandDTO = _mapper.Map<BrandDTO>(createdBrand);
 
-                return ResultService.Ok(createdBrandDTO);
+                return createdBrandDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<BrandDTO>($"Erro ao criar marca: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<BrandDTO>> GetBrandById(Guid id) {
+        public async Task<object> GetBrandById(Guid id) {
             try {
                 var brand = await _brandRepository.GetBrandById(id);
 
@@ -56,13 +56,13 @@ namespace Recharge.Application.Services.Products {
                 }
 
                 var brandDTO = _mapper.Map<BrandDTO>(brand);
-                return ResultService.Ok(brandDTO);
+                return brandDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<BrandDTO>($"Erro ao obter marca por ID: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<BrandDTO>> GetBrandByName(string name) {
+        public async Task<object> GetBrandByName(string name) {
             try {
                 var brand = await _brandRepository.GetBrandByName(name);
 
@@ -71,24 +71,24 @@ namespace Recharge.Application.Services.Products {
                 }
 
                 var brandDTO = _mapper.Map<BrandDTO>(brand);
-                return ResultService.Ok(brandDTO);
+                return brandDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<BrandDTO>($"Erro ao obter marca por nome: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<ICollection<BrandDTO>>> GetAllBrands() {
+        public async Task<ICollection<object>> GetAllBrands() {
             try {
                 var brands = await _brandRepository.GetAllBrands();
                 var brandDTOs = _mapper.Map<ICollection<BrandDTO>>(brands);
 
-                return ResultService.Ok(brandDTOs);
+                return new List<object>(brandDTOs);
             } catch (Exception ex) {
-                return ResultService.Fail<ICollection<BrandDTO>>($"Erro ao obter todas as marcas: {ex.Message}");
+                return new List<object> { $"Erro ao obter todas as marcas: {ex.Message}" };
             }
         }
 
-        public async Task<ResultService<BrandDTO>> UpdateBrand(Guid id, BrandDTO brandDTO) {
+        public async Task<object> UpdateBrand(Guid id, BrandDTO brandDTO) {
             try {
                 var existingBrand = await _brandRepository.GetBrandById(id);
 
@@ -112,13 +112,13 @@ namespace Recharge.Application.Services.Products {
                 var updatedBrandResult = await _brandRepository.UpdateBrand(updatedBrand);
                 var updatedBrandDTO = _mapper.Map<BrandDTO>(updatedBrandResult);
 
-                return ResultService.Ok(updatedBrandDTO);
+                return updatedBrandDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<BrandDTO>($"Erro ao atualizar marca: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<BrandDTO>> DeleteBrand(Guid id) {
+        public async Task<object> DeleteBrand(Guid id) {
             try {
                 var existingBrand = await _brandRepository.GetBrandById(id);
 
@@ -129,7 +129,7 @@ namespace Recharge.Application.Services.Products {
                 var deletedBrand = await _brandRepository.DeleteBrand(existingBrand);
                 var deletedBrandDTO = _mapper.Map<BrandDTO>(deletedBrand);
 
-                return ResultService.Ok(deletedBrandDTO);
+                return deletedBrandDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<BrandDTO>($"Erro ao remover marca: {ex.Message}");
             }

@@ -22,7 +22,7 @@ public class AddressRepository : IAddressRepository {
         return await _dbContext.Addresses.FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<ICollection<Address>> GetAddress(Address address) {
+    public async Task<ICollection<Address>> GetAddress() {
         return await _dbContext.Addresses.ToListAsync();
     }
 

@@ -9,6 +9,7 @@ public sealed class Product : Entity {
     public string? Description { get; set; }
     public decimal? Price { get; set; }
     public long? Amount { get; set; }
+    public string? ImageUrl { get; set; }
 
     public Category Category { get; set; }
     public Guid? CategoryId { get; set; }

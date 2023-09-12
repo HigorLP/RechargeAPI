@@ -17,7 +17,7 @@ public class CategoryController : ControllerBase {
     public async Task<ActionResult> CreateCategory([FromBody] CategoryDTO categoryDTO) {
         var result = await _categoryService.CreateCategory(categoryDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -28,7 +28,7 @@ public class CategoryController : ControllerBase {
     public async Task<ActionResult> GetCategoryById(Guid id) {
         var result = await _categoryService.GetCategoryById(id);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -39,7 +39,7 @@ public class CategoryController : ControllerBase {
     public async Task<ActionResult> GetCategoryByName(string name) {
         var result = await _categoryService.GetCategoryByName(name);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -50,7 +50,7 @@ public class CategoryController : ControllerBase {
     public async Task<ActionResult> GetAllCategories() {
         var result = await _categoryService.GetAllCategories();
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -61,7 +61,7 @@ public class CategoryController : ControllerBase {
     public async Task<ActionResult> UpdateCategory(Guid id, [FromBody] CategoryDTO categoryDTO) {
         var result = await _categoryService.UpdateCategory(id, categoryDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -72,7 +72,7 @@ public class CategoryController : ControllerBase {
     public async Task<ActionResult> DeleteCategory(Guid id) {
         var result = await _categoryService.DeleteCategory(id);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 

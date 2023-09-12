@@ -40,6 +40,13 @@ public class UserRepository : IUserRepository {
         return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<User> GetUserDetail(Guid userId) {
+        return await _dbContext.Users
+            .Include(u => u.Addresses)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+    }
+
+
     public async Task<User> LogIn(Guid userId, bool status) {
         var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
 

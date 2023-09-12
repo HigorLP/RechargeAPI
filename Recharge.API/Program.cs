@@ -66,14 +66,20 @@ builder.Services.AddAuthentication(authOptions => {
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment()) {
+app.UseSwagger();
+app.UseSwaggerUI();
+
+/*if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+}*/
 
 app.UseCors("AllowOrigin");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapGet("/", () => {
+    return Results.Redirect("/swagger");
+});
 app.MapControllers();
 app.Run();

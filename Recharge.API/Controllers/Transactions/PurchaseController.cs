@@ -14,10 +14,10 @@ public class PurchaseController : ControllerBase {
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePurchase([FromBody] PurchaseDTO purchaseDTO) {
+    public async Task<ActionResult> CreatePurchase([FromBody] PurchaseDTO purchaseDTO) {
         var result = await _purchaseService.CreatePurchase(purchaseDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -25,10 +25,10 @@ public class PurchaseController : ControllerBase {
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetPurchaseById(Guid id) {
+    public async Task<ActionResult> GetPurchaseById(Guid id) {
         var result = await _purchaseService.GetPurchaseById(id);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -36,10 +36,10 @@ public class PurchaseController : ControllerBase {
     }
 
     [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetPurchasesByUserId(Guid userId) {
+    public async Task<ActionResult> GetPurchasesByUserId(Guid userId) {
         var result = await _purchaseService.GetPurchasesByUserId(userId);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -47,10 +47,10 @@ public class PurchaseController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPurchases() {
+    public async Task<ActionResult> GetAllPurchases() {
         var result = await _purchaseService.GetAllPurchases();
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -58,10 +58,10 @@ public class PurchaseController : ControllerBase {
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdatePurchase(Guid id, [FromBody] PurchaseDTO purchaseDTO) {
+    public async Task<ActionResult> UpdatePurchase(Guid id, [FromBody] PurchaseDTO purchaseDTO) {
         var result = await _purchaseService.UpdatePurchase(id, purchaseDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -69,10 +69,10 @@ public class PurchaseController : ControllerBase {
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> RemovePurchase(Guid id) {
+    public async Task<ActionResult> RemovePurchase(Guid id) {
         var result = await _purchaseService.RemovePurchase(id, null);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 

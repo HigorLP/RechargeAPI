@@ -17,7 +17,7 @@ public class UserController : ControllerBase {
     public async Task<ActionResult> RegisterUser([FromBody] RegisterUserDTO userDTO) {
         var result = await _userService.RegisterUser(userDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -28,18 +28,30 @@ public class UserController : ControllerBase {
     public async Task<ActionResult> GetUserById(Guid id) {
         var result = await _userService.GetUserById(id);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
         return NotFound(result);
     }
 
+    [HttpGet("detail/{id}")]
+    public async Task<ActionResult> GetUserDetail(Guid id) {
+        var result = await _userService.GetUserDetail(id);
+
+        if (result != null) {
+            return Ok(result);
+        }
+
+        return NotFound(result);
+    }
+
+
     [HttpGet("email/{email}")]
     public async Task<ActionResult> GetUserByEmail(string email) {
         var result = await _userService.GetUserByEmail(email);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -50,7 +62,7 @@ public class UserController : ControllerBase {
     public async Task<ActionResult> GetUserByDocument(string cpf) {
         var result = await _userService.GetUserByDocument(cpf);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -61,7 +73,7 @@ public class UserController : ControllerBase {
     public async Task<ActionResult> GetAllUsers() {
         var result = await _userService.GetAllUsers();
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -72,7 +84,7 @@ public class UserController : ControllerBase {
     public async Task<ActionResult> CompleteRegister(Guid id, [FromBody] UserUpdateDTO userDTO) {
         var result = await _userService.CompleteRegister(id, userDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -83,7 +95,7 @@ public class UserController : ControllerBase {
     public async Task<ActionResult> UpdateUser(Guid id, [FromBody] UserUpdateDTO userDTO) {
         var result = await _userService.UpdateUser(id, userDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -94,7 +106,7 @@ public class UserController : ControllerBase {
     public async Task<ActionResult> DeleteUser(Guid id) {
         var result = await _userService.DeleteUser(id, null);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 

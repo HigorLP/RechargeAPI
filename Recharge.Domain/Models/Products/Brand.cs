@@ -2,7 +2,7 @@
 
 public sealed class Brand : Entity {
 
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
     public ICollection<Product> Products { get; set; }
 

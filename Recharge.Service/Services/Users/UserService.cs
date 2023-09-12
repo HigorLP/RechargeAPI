@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc;
 using Recharge.Application.DTOs.Users;
 using Recharge.Application.Interfaces.Users;
 using Recharge.Application.Validator.User;
@@ -24,7 +23,7 @@ public class UserService : IUserService {
         _tokenService = tokenService;
     }
 
-    public async Task<ResultService<UserResponseDTO>> RegisterUser(RegisterUserDTO userDTO) {
+    public async Task<object> RegisterUser(RegisterUserDTO userDTO) {
         try {
 
             if (!Validator.CustomUserValidator.SecurityLevel(userDTO.HashPassword)) {
@@ -51,14 +50,14 @@ public class UserService : IUserService {
 
             var userResponseDTO = _mapper.Map<UserResponseDTO>(registeredUser);
 
-            return ResultService.Ok(userResponseDTO);
+            return (userResponseDTO);
         } catch (Exception ex) {
             return ResultService.Fail<UserResponseDTO>($"Erro ao registrar usuário: {ex.Message}");
         }
     }
 
 
-    public async Task<ResultService<UserResponseDTO>> GetUserById(Guid id) {
+    public async Task<object> GetUserById(Guid id) {
         try {
             var user = await _userRepository.GetUserById(id);
 
@@ -67,13 +66,13 @@ public class UserService : IUserService {
             }
 
             var userResponseDTO = _mapper.Map<UserResponseDTO>(user);
-            return ResultService.Ok(userResponseDTO);
+            return (userResponseDTO);
         } catch (Exception ex) {
             return ResultService.Fail<UserResponseDTO>($"Erro ao obter usuário por ID: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<UserResponseDTO>> GetUserByEmail(string email) {
+    public async Task<object> GetUserByEmail(string email) {
         try {
             var user = await _userRepository.GetUserByEmail(email);
 
@@ -82,13 +81,13 @@ public class UserService : IUserService {
             }
 
             var userResponseDTO = _mapper.Map<UserResponseDTO>(user);
-            return ResultService.Ok(userResponseDTO);
+            return (userResponseDTO);
         } catch (Exception ex) {
             return ResultService.Fail<UserResponseDTO>($"Erro ao obter usuário por e-mail: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<UserResponseDTO>> GetUserByDocument(string cpf) {
+    public async Task<object> GetUserByDocument(string cpf) {
         try {
             var user = await _userRepository.GetUserByDocument(cpf);
 
@@ -97,24 +96,24 @@ public class UserService : IUserService {
             }
 
             var userResponseDTO = _mapper.Map<UserResponseDTO>(user);
-            return ResultService.Ok(userResponseDTO);
+            return (userResponseDTO);
         } catch (Exception ex) {
             return ResultService.Fail<UserResponseDTO>($"Erro ao obter usuário por CPF: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<ICollection<UserResponseDTO>>> GetAllUsers() {
+    public async Task<ICollection<object>> GetAllUsers() {
         try {
             var users = await _userRepository.GetAllUsers();
             var userResponseDTOs = _mapper.Map<ICollection<UserResponseDTO>>(users);
 
-            return ResultService.Ok(userResponseDTOs);
+            return new List<object>(userResponseDTOs);
         } catch (Exception ex) {
-            return ResultService.Fail<ICollection<UserResponseDTO>>($"Erro ao obter todos os usuários: {ex.Message}");
+            return new List<object> { ($"Erro ao obter todos os usuários: {ex.Message}") };
         }
     }
 
-    public async Task<ResultService<UserUpdateDTO>> CompleteRegister(Guid id, UserUpdateDTO userDTO) {
+    public async Task<object> CompleteRegister(Guid id, UserUpdateDTO userDTO) {
         try {
             var existingUser = await _userRepository.GetUserById(id);
 
@@ -134,13 +133,13 @@ public class UserService : IUserService {
             var completedUser = await _userRepository.CompleteRegister(updatedUser);
             var completedUserDTO = _mapper.Map<UserUpdateDTO>(completedUser);
 
-            return ResultService.Ok(completedUserDTO);
+            return (completedUserDTO);
         } catch (Exception ex) {
             return ResultService.Fail<UserUpdateDTO>($"Erro ao completar registro do usuário: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<UserUpdateDTO>> UpdateUser(Guid id, UserUpdateDTO userDTO) {
+    public async Task<object> UpdateUser(Guid id, UserUpdateDTO userDTO) {
         try {
             var existingUser = await _userRepository.GetUserById(id);
 
@@ -160,13 +159,13 @@ public class UserService : IUserService {
             var completedUser = await _userRepository.CompleteRegister(updatedUser);
             var completedUserDTO = _mapper.Map<UserUpdateDTO>(completedUser);
 
-            return ResultService.Ok(completedUserDTO);
+            return (completedUserDTO);
         } catch (Exception ex) {
             return ResultService.Fail<UserUpdateDTO>($"Erro ao atualizar registro do usuário: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<UserResponseDTO>> DeleteUser(Guid id, UserDTO userDTO) {
+    public async Task<object> DeleteUser(Guid id, UserDTO userDTO) {
         try {
             var existingUser = await _userRepository.GetUserById(id);
 
@@ -177,7 +176,7 @@ public class UserService : IUserService {
             var deletedUser = await _userRepository.DeleteUser(existingUser);
             var deletedUserDTO = _mapper.Map<UserResponseDTO>(deletedUser);
 
-            return ResultService.Ok(deletedUserDTO);
+            return (deletedUserDTO);
         } catch (Exception ex) {
             return ResultService.Fail<UserResponseDTO>($"Erro ao excluir usuário: {ex.Message}");
         }
@@ -207,6 +206,26 @@ public class UserService : IUserService {
             return (token);
         } catch (Exception ex) {
             return ($"Erro ao fazer login: {ex.Message}");
+        }
+    }
+
+    public async Task<object> GetUserDetail(Guid id) {
+        try {
+            var user = await _userRepository.GetUserDetail(id);
+
+            if (user == null) {
+                return ResultService.Fail<UserDetailDTO>("Usuário não encontrado.");
+            }
+
+            // Mapeie o usuário para UserDetailDTO
+            var userDetailDTO = _mapper.Map<UserDetailDTO>(user);
+
+            // Mapeie os endereços para AddressDTO
+            userDetailDTO.Addresses = _mapper.Map<ICollection<AddressDTO>>(user.Addresses);
+
+            return userDetailDTO;
+        } catch (Exception ex) {
+            return ResultService.Fail<UserDetailDTO>($"Erro ao obter detalhes do usuário: {ex.Message}");
         }
     }
 }

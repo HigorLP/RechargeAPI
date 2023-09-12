@@ -1,7 +1,7 @@
 ﻿namespace Recharge.Domain.Models.Products;
 public sealed class Category : Entity {
 
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
     public ICollection<Product> Products { get; set; }
 

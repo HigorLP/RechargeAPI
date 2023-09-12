@@ -19,7 +19,7 @@ namespace Recharge.Application.Services.Products {
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ResultService<CategoryDTO>> CreateCategory(CategoryDTO categoryDTO) {
+        public async Task<object> CreateCategory(CategoryDTO categoryDTO) {
             try {
                 var category = _mapper.Map<Category>(categoryDTO);
 
@@ -41,13 +41,13 @@ namespace Recharge.Application.Services.Products {
                 var createdCategory = await _categoryRepository.CreateCategory(category);
                 var createdCategoryDTO = _mapper.Map<CategoryDTO>(createdCategory);
 
-                return ResultService.Ok(createdCategoryDTO);
+                return createdCategoryDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<CategoryDTO>($"Erro ao criar categoria: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<CategoryDTO>> GetCategoryById(Guid id) {
+        public async Task<object> GetCategoryById(Guid id) {
             try {
                 var category = await _categoryRepository.GetCategoryById(id);
 
@@ -56,13 +56,13 @@ namespace Recharge.Application.Services.Products {
                 }
 
                 var categoryDTO = _mapper.Map<CategoryDTO>(category);
-                return ResultService.Ok(categoryDTO);
+                return categoryDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<CategoryDTO>($"Erro ao obter categoria por ID: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<CategoryDTO>> GetCategoryByName(string name) {
+        public async Task<object> GetCategoryByName(string name) {
             try {
                 var category = await _categoryRepository.GetCategoryByName(name);
 
@@ -71,24 +71,24 @@ namespace Recharge.Application.Services.Products {
                 }
 
                 var categoryDTO = _mapper.Map<CategoryDTO>(category);
-                return ResultService.Ok(categoryDTO);
+                return categoryDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<CategoryDTO>($"Erro ao obter categoria por nome: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<ICollection<CategoryDTO>>> GetAllCategories() {
+        public async Task<ICollection<object>> GetAllCategories() {
             try {
                 var categories = await _categoryRepository.GetAllCategories();
                 var categoryDTOs = _mapper.Map<ICollection<CategoryDTO>>(categories);
 
-                return ResultService.Ok(categoryDTOs);
+                return new List<object>(categoryDTOs);
             } catch (Exception ex) {
-                return ResultService.Fail<ICollection<CategoryDTO>>($"Erro ao obter todas as categorias: {ex.Message}");
+                return new List<object> { $"Erro ao obter todas as categorias: {ex.Message}" };
             }
         }
 
-        public async Task<ResultService<CategoryDTO>> UpdateCategory(Guid id, CategoryDTO categoryDTO) {
+        public async Task<object> UpdateCategory(Guid id, CategoryDTO categoryDTO) {
             try {
                 var existingCategory = await _categoryRepository.GetCategoryById(id);
 
@@ -117,14 +117,14 @@ namespace Recharge.Application.Services.Products {
                 var updatedCategoryResult = await _categoryRepository.UpdateCategory(updatedCategory);
                 var updatedCategoryDTO = _mapper.Map<CategoryDTO>(updatedCategoryResult);
 
-                return ResultService.Ok(updatedCategoryDTO);
+                return updatedCategoryDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<CategoryDTO>($"Erro ao atualizar categoria: {ex.Message}");
             }
         }
 
 
-        public async Task<ResultService<CategoryDTO>> DeleteCategory(Guid id) {
+        public async Task<object> DeleteCategory(Guid id) {
             try {
                 var existingCategory = await _categoryRepository.GetCategoryById(id);
 
@@ -135,7 +135,7 @@ namespace Recharge.Application.Services.Products {
                 var deletedCategory = await _categoryRepository.DeleteCategory(existingCategory);
                 var deletedCategoryDTO = _mapper.Map<CategoryDTO>(deletedCategory);
 
-                return ResultService.Ok(deletedCategoryDTO);
+                return deletedCategoryDTO;
             } catch (Exception ex) {
                 return ResultService.Fail<CategoryDTO>($"Erro ao remover categoria: {ex.Message}");
             }

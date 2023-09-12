@@ -17,20 +17,20 @@ namespace Recharge.Application.Services.Users {
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ResultService<AddressDTO>> CreateAddress(AddressDTO addressDTO) {
+        public async Task<object> CreateAddress(AddressDTO addressDTO) {
             try {
                 var address = _mapper.Map<Address>(addressDTO);
 
                 var createdAddress = await _addressRepository.CreateAddress(address);
                 var createdAddressDTO = _mapper.Map<AddressDTO>(createdAddress);
 
-                return ResultService.Ok(createdAddressDTO);
+                return (createdAddressDTO);
             } catch (Exception ex) {
                 return ResultService.Fail<AddressDTO>($"Erro ao criar endereço: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<AddressDTO>> GetAddressById(Guid id) {
+        public async Task<object> GetAddressById(Guid id) {
             try {
                 var address = await _addressRepository.GetAddressById(id);
 
@@ -39,25 +39,25 @@ namespace Recharge.Application.Services.Users {
                 }
 
                 var addressDTO = _mapper.Map<AddressDTO>(address);
-                return ResultService.Ok(addressDTO);
+                return (addressDTO);
             } catch (Exception ex) {
                 return ResultService.Fail<AddressDTO>($"Erro ao obter endereço por ID: {ex.Message}");
             }
         }
 
-        public async Task<ResultService<ICollection<AddressDTO>>> GetAddress(AddressDTO addressDTO) {
+        public async Task<ICollection<object>> GetAddress() {
             try {
-                
-                var addresses = await _addressRepository.GetAddress(_mapper.Map<Address>(addressDTO));
+
+                var addresses = await _addressRepository.GetAddress();
                 var addressDTOs = _mapper.Map<ICollection<AddressDTO>>(addresses);
 
-                return ResultService.Ok(addressDTOs);
+                return new List<object>(addressDTOs);
             } catch (Exception ex) {
-                return ResultService.Fail<ICollection<AddressDTO>>($"Erro ao obter endereços: {ex.Message}");
+                return new List<object> { ($"Erro ao obter endereços: {ex.Message}") };
             }
         }
 
-        public async Task<ResultService<AddressDTO>> UpdateAddress(AddressDTO addressDTO) {
+        public async Task<object> UpdateAddress(AddressDTO addressDTO) {
             try {
                 var existingAddress = await _addressRepository.GetAddressById(addressDTO.Id.Value);
 
@@ -70,13 +70,13 @@ namespace Recharge.Application.Services.Users {
                 var updatedAddressResult = await _addressRepository.UpdateAddress(updatedAddress);
                 var updatedAddressDTO = _mapper.Map<AddressDTO>(updatedAddressResult);
 
-                return ResultService.Ok(updatedAddressDTO);
+                return (updatedAddressDTO);
             } catch (Exception ex) {
                 return ResultService.Fail<AddressDTO>($"Erro ao atualizar endereço: {ex.Message}");
             }
         }
 
-        public async Task<ResultService> DeleteAddress(Guid id) {
+        public async Task<object> DeleteAddress(Guid id) {
             try {
                 var existingAddress = await _addressRepository.GetAddressById(id);
 
@@ -86,7 +86,7 @@ namespace Recharge.Application.Services.Users {
 
                 await _addressRepository.DeleteAddress(existingAddress);
 
-                return ResultService.Ok(existingAddress);
+                return (existingAddress);
             } catch (Exception ex) {
                 return ResultService.Fail($"Erro ao remover endereço: {ex.Message}");
             }

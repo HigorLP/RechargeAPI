@@ -19,7 +19,7 @@ public class DatasheetService : IDatasheetService {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<ResultService<DatasheetDTO>> CreateDatasheet(DatasheetDTO datasheetDTO) {
+    public async Task<object> CreateDatasheet(DatasheetDTO datasheetDTO) {
         try {
             var datasheet = _mapper.Map<Datasheet>(datasheetDTO);
 
@@ -36,13 +36,13 @@ public class DatasheetService : IDatasheetService {
             var createdDatasheet = await _datasheetRepository.CreateDatasheet(datasheet);
             var createdDatasheetDTO = _mapper.Map<DatasheetDTO>(createdDatasheet);
 
-            return ResultService.Ok(createdDatasheetDTO);
+            return (createdDatasheetDTO);
         } catch (Exception ex) {
             return ResultService.Fail<DatasheetDTO>($"Erro ao criar datasheet: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<DatasheetDTO>> GetDatasheetById(Guid id) {
+    public async Task<object> GetDatasheetById(Guid id) {
         try {
             var datasheet = await _datasheetRepository.GetDatasheetById(id);
 
@@ -51,24 +51,24 @@ public class DatasheetService : IDatasheetService {
             }
 
             var datasheetDTO = _mapper.Map<DatasheetDTO>(datasheet);
-            return ResultService.Ok(datasheetDTO);
+            return (datasheetDTO);
         } catch (Exception ex) {
             return ResultService.Fail<DatasheetDTO>($"Erro ao obter datasheet por ID: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<ICollection<DatasheetDTO>>> GetAllDatasheets() {
+    public async Task<ICollection<object>> GetAllDatasheets() {
         try {
             var datasheets = await _datasheetRepository.GetAllDatasheets();
             var datasheetDTOs = _mapper.Map<ICollection<DatasheetDTO>>(datasheets);
 
-            return ResultService.Ok(datasheetDTOs);
+            return new List<object>(datasheetDTOs);
         } catch (Exception ex) {
-            return ResultService.Fail<ICollection<DatasheetDTO>>($"Erro ao obter todos os datasheets: {ex.Message}");
+            return new List<object> { ($"Erro ao obter todos os datasheets: {ex.Message}") };
         }
     }
 
-    public async Task<ResultService<DatasheetDTO>> UpdateDatasheet(Guid id, DatasheetDTO datasheetDTO) {
+    public async Task<object> UpdateDatasheet(Guid id, DatasheetDTO datasheetDTO) {
         try {
             var existingDatasheet = await _datasheetRepository.GetDatasheetById(id);
 
@@ -92,13 +92,13 @@ public class DatasheetService : IDatasheetService {
             var updatedDatasheetResult = await _datasheetRepository.UpdateDatasheet(updatedDatasheet);
             var updatedDatasheetDTO = _mapper.Map<DatasheetDTO>(updatedDatasheetResult);
 
-            return ResultService.Ok(updatedDatasheetDTO);
+            return (updatedDatasheetDTO);
         } catch (Exception ex) {
             return ResultService.Fail<DatasheetDTO>($"Erro ao atualizar datasheet: {ex.Message}");
         }
     }
 
-    public async Task<ResultService<DatasheetDTO>> DeleteDatasheet(Guid id) {
+    public async Task<object> DeleteDatasheet(Guid id) {
         try {
             var existingDatasheet = await _datasheetRepository.GetDatasheetById(id);
 
@@ -109,7 +109,7 @@ public class DatasheetService : IDatasheetService {
             var deletedDatasheet = await _datasheetRepository.DeleteDatasheet(existingDatasheet);
             var deletedDatasheetDTO = _mapper.Map<DatasheetDTO>(deletedDatasheet);
 
-            return ResultService.Ok(deletedDatasheetDTO);
+            return (deletedDatasheetDTO);
         } catch (Exception ex) {
             return ResultService.Fail<DatasheetDTO>($"Erro ao remover datasheet: {ex.Message}");
         }

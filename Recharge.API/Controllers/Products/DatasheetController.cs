@@ -17,7 +17,7 @@ public class DatasheetController : ControllerBase {
     public async Task<ActionResult> CreateDatasheet([FromBody] DatasheetDTO datasheetDTO) {
         var result = await _datasheetService.CreateDatasheet(datasheetDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -28,7 +28,7 @@ public class DatasheetController : ControllerBase {
     public async Task<ActionResult> GetDatasheetById(Guid id) {
         var result = await _datasheetService.GetDatasheetById(id);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -39,7 +39,7 @@ public class DatasheetController : ControllerBase {
     public async Task<ActionResult> GetAllDatasheets() {
         var result = await _datasheetService.GetAllDatasheets();
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -50,7 +50,7 @@ public class DatasheetController : ControllerBase {
     public async Task<ActionResult> UpdateDatasheet(Guid id, [FromBody] DatasheetDTO datasheetDTO) {
         var result = await _datasheetService.UpdateDatasheet(id, datasheetDTO);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 
@@ -61,7 +61,7 @@ public class DatasheetController : ControllerBase {
     public async Task<ActionResult> DeleteDatasheet(Guid id) {
         var result = await _datasheetService.DeleteDatasheet(id);
 
-        if (result.isSucess) {
+        if (result != null) {
             return Ok(result);
         }
 

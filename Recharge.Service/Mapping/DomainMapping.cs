@@ -28,6 +28,8 @@ public class DomainMapping : Profile {
 
         CreateMap<Address, AddressDTO>();
         CreateMap<AddressDTO, Address>().ReverseMap();
+
+        CreateMap<User, UserDetailDTO>().ReverseMap();
         #endregion
 
         #region Products
